@@ -1,0 +1,184 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package dna;
+
+
+/* This program should scan DNA and identify proteins. - OK
+ * This program should put all samples together and scan for proteins. - 50%
+ * If this program should find protein and add it to ArrayList - OK ( working in loop for in main method) Need to make it work in continueSearch.
+ * This program should continue searching for other proteins in a sample - 25%
+ *      NOT WORKING => My Ideas:
+ *      Try save leftovers as ArrayList <String> leftovers and search in elements of this ArrayList 
+ *      Try to search thru dna by changing index where you start by values stored in int[] nextCharArray (nextCharTest >>> Working on it CHECK continueSearch!
+ * 
+ *    -. .-.   .-. .-.   
+ *   \   \ /   \   \ / 
+ *  / \   \   / \   \  
+ * ~   `-~ `-`   `-~ `-
+ * Protein definition:
+ * Protein starts with "ATG"!
+ * Protein ends with "TGA"!
+ * Everything between thosee must be divisible by 3!
+
+  */
+  
+import java.util.ArrayList;
+
+public class Dna {
+
+     
+    /*
+    Here you need to make method that:
+    1) starts searching at nextChar[i], i = 0 
+    2) Finds startTest = "ATG" and endTest = "TGA" and evaluate if (TGA - ATG % 3 == 0)
+    3) true => 3.1) add it to proteinList  
+               3.2) save nextChar in Array[i+1]
+               3.3) starts searching at nextChar[i+1]
+               3.4) finds another ATG and TGA and evaluate if (TGA - ATG % 3 == 0)
+               3.5) Repeat till end
+    3) If not continue searching from NEW nextChar
+    */
+    
+    // WORKING ON
+    /*
+    here I created String dna5 that I am going to search for proteins
+    ArrayList<String> otherProteins store proteins I found
+    nextCharTest[] store index of char in dna5 that I´ll continue search on.
+    int indexOfArray
+    
+    */
+    
+    public static ArrayList<String> continueSearch(){
+        // Initialize variables ( when I figure it out I´ll change dna5 to dna !!!)
+        String dna5 = "ATGFIRSTPROTEINTGAATGSECONDPROTEINTGAATGTHIRDPROTEINTTGA";
+        ArrayList<String> otherProteins = new ArrayList<>();
+        int[] nextCharTest;
+        nextCharTest = new int[10];
+        nextCharTest[0] = 0;
+        int indexOfArray = 0;
+        int startTest = (dna5.indexOf("ATG", indexOfArray));
+        int endTest = (dna5.indexOf("TGA", indexOfArray) + 3 );
+        
+        // printing out to help me to understand it
+        System.out.println("Total of chars in dna5: " + dna5.length());
+        System.out.println("First ocurance of start " + startTest);
+        System.out.println("First ocurance of nextchar " + (endTest + 1));
+        
+        // Here it runs method
+        if (startTest != -1 && endTest != -1 && (endTest - startTest) % 3 == 0){
+            
+            for (int i = 0; i <= dna5.length(); i = i + nextCharTest[indexOfArray]){
+                // Finds substring and add it to Arraylist otherProteins
+                otherProteins.add(dna5.substring(startTest, endTest));
+                // Add the character you that start searching on to index indexOfArray + 1
+                nextCharTest[indexOfArray + 1] = endTest + 1;
+                indexOfArray = indexOfArray + 1;
+                // Continue searching
+                startTest = (dna5.indexOf("ATG", nextCharTest[indexOfArray]));
+                endTest = (dna5.indexOf("TGA", nextCharTest [indexOfArray]) + 3);
+                // Add the character index you will start searching from as value in Array at indexOfArray + 1
+                nextCharTest[indexOfArray =+ 1] = endTest + 3;
+                // evaluate if substring is divisible by 3
+                    if (endTest - startTest % 3 ==0){
+                        otherProteins.add(dna5.substring(startTest, endTest));
+                }
+                nextCharTest[indexOfArray =+ 1] = endTest + 3;
+                }
+        } 
+        // Printing out info to help me to solve it.
+        System.out.println("Index 0: " + nextCharTest[0]);
+        System.out.println("Index 1: " + nextCharTest[1] + " - Nonsense - only 56 char in String!");
+        System.out.println("Index 2: " + nextCharTest[2] + " - Nonsense - can´t be lower than previous index!");
+        System.out.println("Here it should print: [ATGFIRSTPROTEINTGA, ATGSECONDPROTEINTGA, ATGTHIRDPROTEIN0TGA] - It doesn´t. I am crying! ");
+        
+        // Printing out to see if it works
+        System.out.println("otherProteins<String> contains : " + otherProteins);
+        System.out.println("otherProteins<String> size: " + otherProteins.size());
+        System.out.println("No crash in continueSearch.");
+            
+
+        return otherProteins;
+    }
+    
+    
+    // Find second start and end
+    ArrayList <Integer> startsOfProteins = new ArrayList<>();
+    ArrayList <Integer> endsOfProteins = new ArrayList<>();
+
+ 
+  public static void main(String[] args) {
+          
+    String dna1 = "ATGCGATACGCTTGA";
+    String dna2 = "ATGCGATACGTGA";
+    String dna3 = "ATTAATATGTACTGA";
+    String dna4 = "ATTAATATGTAGATCTGA";
+    
+    // Put samples together
+    String wholeSample = dna1.concat(dna2.concat(dna3.concat(dna4)));
+    
+
+    //ArrayList of proteins and Array of next characters index( -1!!!)
+    //nextChar keeps index of char you will start searching again
+    ArrayList<String> proteinList = new ArrayList<>();
+    int[] nextCharArray;
+    nextCharArray = new int[10];
+    
+    // Arraylist of leftovers
+    // leftovers keeps leftover of sample after it 
+    ArrayList <String> leftovers = new ArrayList<>();
+    
+    // Put sample here!
+    //String dna = wholeSample;
+    String dna = dna3;
+
+    // Length Uncoment in final code !!!
+    //System.out.println("In the sample, there are " + dna.length() + " nucleotides.");
+
+    // Inicialize start and end of protein
+    int start = (dna.indexOf("ATG"));
+    int end = (dna.indexOf("TGA"));
+
+    // Is it protein
+    if (start != -1 && end != -1 && (end - start) % 3 == 0){
+
+      // Printing out info to help me solve this problem
+      //System.out.println("There is: " + dna.length()+ " char.");
+      //System.out.println("All samples together: " + wholeSample);
+      //System.out.println("Current sample: " + dna);
+      // Here you see that start = first ocurance of ATG 
+      //System.out.println("First protein starts at index : " + dna.indexOf("ATG"));
+      
+
+      // For => adding proteins to proteinList <String>
+      /*    It works for dna3
+            It initiaze start as first ocurance in string. Thats problem because of counter in for.
+            It doesn´t save rest of sample to leftovers ArrayList => propably needs another for 
+      */
+      for (int i = start; i <= (dna.length()); i = i + nextCharArray[0]){
+          
+        // Find first one; determine next char; add protein to proteinList
+        
+        String protein = dna.substring(start, end + 3);
+        int nextChar = end + 1;
+        proteinList.add(protein);
+        nextCharArray [0] = nextChar;
+        leftovers.add(dna.substring(end + 3 , dna.length())); // ArrayList leftovers
+        
+        
+       
+    }}
+    else {
+      System.out.println("There are no proteins!");
+    }
+   // main method continue
+   //System.out.println("Sample contains total of: " + proteinList.size()+ " proteins.");
+   //System.out.println("Sample contain this proteins: " + proteinList);
+   //System.out.println("Leftover: " + leftovers);
+   
+   continueSearch();
+    }
+
+  }
